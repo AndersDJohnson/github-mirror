@@ -18,6 +18,7 @@ const cli = meow(`
     -o, --org <org>           Organization (instead of user)
     -x, --max-repos <max>     Max number of repos
     -n, --no-clone            Don't clone.
+    -f, --fresh               Don't cache.
 
   Examples
     $ github-mirror -t ABCDEFG
@@ -42,5 +43,6 @@ mirror({
   token: flags.t,
   org: flags.o,
   user: flags.u,
-  password: flags.p
+  password: flags.p,
+  fresh: flags.f
 })
