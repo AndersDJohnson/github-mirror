@@ -1,4 +1,4 @@
-var mirror = require('.')
+var mirror = require('./src')
 var token = require('./token.private.json').token
 
 mirror({

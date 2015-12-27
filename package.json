@@ -2,7 +2,7 @@
   "name": "github-mirror",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "rm -rf data/mirror && node test"
   },
