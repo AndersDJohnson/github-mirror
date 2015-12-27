@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "debug": "^2.2.0",
     "es6-promise": "^3.0.2",
     "file-size": "^1.0.0",
     "get-folder-size": "^1.0.0",

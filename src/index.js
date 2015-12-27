@@ -15,6 +15,7 @@ var getSize = require('get-folder-size')
 var filesize = require('file-size')
 var PromiseSeries = require('promise-series')
 var promiseRecurse = require('promise-recurse').promiseRecurse
+var debug = require('debug')('github-mirror')
 
 temp = temp.track()
 
@@ -34,6 +35,8 @@ function run (options) {
     options.owner = options.org
     options.ownerType = 'orgs'
   }
+
+  debug('options', options)
 
   try {
     var repos = jsonfile.readFileSync(options.reposFile)
@@ -84,8 +87,6 @@ function handleRepos (options, repos) {
   })
   all.run()
   .then(function (results) {
-    console.log('RESULTS', results)
-
     var totalSize = results.reduce(function (memo, repo) {
       return memo + (repo.size || 0)
     }, 0)
