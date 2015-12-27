@@ -1,7 +1,7 @@
 {
   "name": "github-mirror",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mirror/backup your GitHub data (repos).",
   "main": "src/index.js",
   "bin": {
     "github-mirror": "src/cli.js"
