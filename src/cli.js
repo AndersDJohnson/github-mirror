@@ -19,7 +19,8 @@ const cli = meow(`
     -u, --user <user>         User (defaults to user for token)
     -o, --org <org>           Organization (instead of user)
     -x, --max-repos <max>     Max number of repos
-    -n, --no-clone            Don't clone.
+    -n, --dry-run             Dry run.
+    -s, --skip-clone          Skip cloning.
     -f, --fresh               Ignore cache.
     -c, --cache               Cache file.
 
@@ -40,9 +41,10 @@ var flags = cli.flags
 
 mirror({
   reposFile: flags.c, // e.g. './data/repos-cli.json'
-  dir: flags.d || process.cwd(), // e.g. './data/mirror-cli'
+  dir: flags.d, // e.g. './data/mirror-cli'
   maxRepos: flags.x,
-  clone: ! flags.n,
+  dryRun: flags.n,
+  clone: ! flags.s,
   token: flags.t,
   org: flags.o,
   user: flags.u,

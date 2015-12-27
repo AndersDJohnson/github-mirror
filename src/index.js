@@ -36,6 +36,10 @@ function run (options) {
     options.ownerType = 'orgs'
   }
 
+  if (! options.dryRun) {
+    options.dir = options.dir || process.cwd()
+  }
+
   debug('options', options)
 
   var reposPromise
@@ -147,7 +151,7 @@ function handleRepo (options, repo) {
       return resolve(state)
     }
 
-    console.log('cloning', repo.fullName)
+    console.log('cloning', repo.fullName, 'into', cloneDir)
     gift.clone(repo.cloneUrl, cloneDir, function (err, _repo) {
       if (err) {
         state.error = err

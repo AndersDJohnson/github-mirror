@@ -23,7 +23,8 @@ Options
   -u, --user <user>         User (defaults to user for token)
   -o, --org <org>           Organization (instead of user)
   -x, --max-repos <max>     Max number of repos
-  -n, --no-clone            Don't clone.
+  -n, --dry-run             Dry run.
+  -s, --skip-clone          Skip cloning.
   -f, --fresh               Ignore cache.
   -c, --cache               Cache file.
 
