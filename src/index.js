@@ -24,7 +24,7 @@ function run (options) {
 
   options = options || {}
   options.dir = options.dir || temp.mkdirSync('github-mirror-')
-  options.clone = options.hasOwnProperty('clone') ? options.close : true
+  options.clone = options.clone === false ? false : true
   options.ownerType = options.ownerType || 'users' // or 'orgs'
 
   if (options.user) {
