@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * github-mirror -t `json -f token.private.json token` -n -x 2
+ * github-mirror -t `json -f token.private.json token` -n -x 2 -f
  */
 
 const meow = require('meow')
