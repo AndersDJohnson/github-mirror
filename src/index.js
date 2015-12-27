@@ -40,6 +40,7 @@ function run (options) {
     handleRepos(options, repos)
   }
   catch (e) {
+    assert(options.token || (options.username && options.password))
     var octo = new Octokat(Object.assign({},
       _.pick(options, ['username', 'password', 'token'])
     ))
