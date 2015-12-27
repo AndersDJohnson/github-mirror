@@ -13,14 +13,14 @@ const cli = meow(`
 
   Options
     -h, --help                Show this help.
-    -d, --dir                 Output directory.
+    -d, --dir                 Output directory. Exclude for dry run in GC'd temp dirs.
     -t, --token <token>       GitHub token
     -p, --password <password> Password (instead of token)
     -u, --user <user>         User (defaults to user for token)
     -o, --org <org>           Organization (instead of user)
     -x, --max-repos <max>     Max number of repos
     -n, --no-clone            Don't clone.
-    -f, --fresh               Don't cache.
+    -f, --fresh               Ignore cache.
     -c, --cache               Cache file.
 
   Examples

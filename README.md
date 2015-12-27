@@ -17,20 +17,27 @@ Usage
 
 Options
   -h, --help                Show this help.
+  -d, --dir                 Output directory. Exclude for dry run in GC'd temp dirs.
   -t, --token <token>       GitHub token
   -p, --password <password> Password (instead of token)
   -u, --user <user>         User (defaults to user for token)
   -o, --org <org>           Organization (instead of user)
   -x, --max-repos <max>     Max number of repos
   -n, --no-clone            Don't clone.
-  -f, --fresh               Don't cache.
+  -f, --fresh               Ignore cache.
+  -c, --cache               Cache file.
 
 Examples
-  $ github-mirror -t ABCDEFG
+  # First dry run:
+  $ github-mirror -t ABC
 
-  $ github-mirror -t ABCDEFG -u AndersDJohnson
+  $ github-mirror -t ABC -d ~/Backups/GitHub
 
-  $ github-mirror -t ABCDEFG -o verbose
+  $ github-mirror -t ABC -d ~/Backups/GitHub -u AndersDJohnson
+
+  $ github-mirror -t ABC -d ~/Backups/GitHub -o verbose
+
+  $ github-mirror -t ABC -d ~/Backups/GitHub -x 10
 ```
 
 ### API
@@ -44,5 +51,8 @@ require('github-mirror')({
   // user: 'AndersDJohnson', // Optional. Defaults to current user.
   // org: 'verbose', // Optional. Instead of `user`.
   // clone: false, // Optional. Defaults to `true`. Whether to clone repos.
+  // password: flags.p,
+  // fresh: true // Optional. Defaults to `false`. Whether to ignore cache.
+  // reposFile: './data/repos.json' // Optional. Path to cached repos file.
 })
 ```
