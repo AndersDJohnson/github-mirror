@@ -19,7 +19,6 @@ Options
   -h, --help                Show this help.
   -d, --dir                 Output directory. Exclude for dry run in GC'd temp dirs.
   -t, --token <token>       GitHub token
-  -p, --password <password> Password (instead of token)
   -u, --user <user>         User (defaults to user for token)
   -o, --org <org>           Organization (instead of user)
   -x, --max-repos <max>     Max number of repos
@@ -52,7 +51,7 @@ require('github-mirror')({
   // user: 'AndersDJohnson', // Optional. Defaults to current user.
   // org: 'verbose', // Optional. Instead of `user`.
   // clone: false, // Optional. Defaults to `true`. Whether to clone repos.
-  // password: flags.p,
+  // dryRun: true, // Optional. Defaults to `false`.
   // fresh: true // Optional. Defaults to `false`. Whether to ignore cache.
   // reposFile: './data/repos.json' // Optional. Path to cached repos file.
 })

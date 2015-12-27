@@ -15,7 +15,6 @@ const cli = meow(`
     -h, --help                Show this help.
     -d, --dir                 Output directory. Exclude for dry run in GC'd temp dirs.
     -t, --token <token>       GitHub token
-    -p, --password <password> Password (instead of token)
     -u, --user <user>         User (defaults to user for token)
     -o, --org <org>           Organization (instead of user)
     -x, --max-repos <max>     Max number of repos
