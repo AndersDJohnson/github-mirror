@@ -1,5 +1,5 @@
 # github-mirror
-Mirror/backup your GitHub data.
+Mirror/backup your GitHub data (repos).
 
 ## Use
 
