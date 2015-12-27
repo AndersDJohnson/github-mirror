@@ -1,9 +1,39 @@
 # github-mirror
 Mirror/backup your GitHub data (repos).
 
+## Install
+
+```
+npm install -g github-mirror
+```
+
 ## Use
 
-A CLI is coming, but for now from a Node.js script:
+### CLI
+
+```
+Usage
+  $ github-mirror [options]
+
+Options
+  -h, --help                Show this help.
+  -t, --token <token>       GitHub token
+  -p, --password <password> Password (instead of token)
+  -u, --user <user>         User (defaults to user for token)
+  -o, --org <org>           Organization (instead of user)
+  -x, --max-repos <max>     Max number of repos
+  -n, --no-clone            Don't clone.
+  -f, --fresh               Don't cache.
+
+Examples
+  $ github-mirror -t ABCDEFG
+
+  $ github-mirror -t ABCDEFG -u AndersDJohnson
+
+  $ github-mirror -t ABCDEFG -o verbose
+```
+
+### API
 
 ```js
 #!/usr/bin/env node
