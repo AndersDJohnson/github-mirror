@@ -12,6 +12,7 @@ const cli = meow(`
     $ github-mirror [options]
 
   Options
+    -h, --help                Show this help.
     -t, --token <token>       GitHub token
     -p, --password <password> Password (instead of token)
     -u, --user <user>         User (defaults to user for token)
