@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "bin": {
+    "github-mirror": "src/cli.js"
+  },
   "scripts": {
     "test": "rm -rf data/mirror && node test"
   },
@@ -15,6 +18,7 @@
     "gift": "^0.7.0",
     "jsonfile": "^2.2.3",
     "lodash": "^3.10.1",
+    "meow": "^3.6.0",
     "mkdirp": "^0.5.1",
     "octokat": "^0.4.15",
     "promise-recurse": "^1.1.3",
