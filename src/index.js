@@ -45,7 +45,7 @@ function run (options) {
       _.pick(options, ['username', 'password', 'token'])
     ))
 
-    var reposOrg = options.owner ? octo[options.ownerType](options.owner) : octo.users
+    var reposOrg = options.owner ? octo[options.ownerType](options.owner) : octo.user
     var repoPromises = reposOrg.repos.fetch()
 
     fetchAll(repoPromises).then(function (repos) {
