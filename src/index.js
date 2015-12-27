@@ -117,7 +117,7 @@ function handleRepos (options, repos) {
       return memo + (repo.size || 0)
     }, 0)
 
-    console.log(filesize(totalSize).human())
+    console.log('Total size:', filesize(totalSize).human())
   }, function (err) {
     console.log('ERROR', err)
   })
