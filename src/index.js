@@ -38,11 +38,30 @@ function run (options) {
 
   debug('options', options)
 
-  try {
-    var repos = jsonfile.readFileSync(options.reposFile)
-    handleRepos(options, repos)
+  var reposPromise
+  if (options.reposFile && ! options.fresh) {
+    try {
+      reposPromise = Promise.resolve(jsonfile.readFileSync(options.reposFile))
+    }
+    catch (e) {
+      reposPromise = fetchRepos(options)
+    }
   }
-  catch (e) {
+  else {
+    reposPromise = fetchRepos(options)
+  }
+
+  reposPromise.then(function (repos) {
+    handleRepos(options, repos)
+  })
+  .catch(function (err) {
+    console.error(err)
+  })
+
+}
+
+function fetchRepos (options) {
+  return new Promise(function (resolve, reject) {
     assert(options.token || (options.username && options.password))
     var octo = new Octokat(Object.assign({},
       _.pick(options, ['username', 'password', 'token'])
@@ -54,14 +73,16 @@ function run (options) {
     fetchAll(repoPromises).then(function (repos) {
       mkdirp.sync(path.dirname(options.reposFile))
       jsonfile.writeFileSync(options.reposFile, repos)
-      handleRepos(options, repos)
+      resolve(repos)
     }, function (err) {
       console.error(err)
+      reject(err)
     })
     .catch(function (err) {
       console.error(err)
+      reject(err)
     })
-  }
+  })
 }
 
 function fetchAll (startPromise) {
