@@ -12,7 +12,7 @@ require('github-mirror')({
   token: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' // From https://github.com/settings/tokens.
   // maxRepos: 2, // Optional.
   // user: 'AndersDJohnson', // Optional. Defaults to current user.
-  // org: 'verb', // Optional. Instead of `user`.
+  // org: 'verbose', // Optional. Instead of `user`.
   // clone: false, // Optional. Defaults to `true`. Whether to clone repos.
 })
 ```

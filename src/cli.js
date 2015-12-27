@@ -25,7 +25,7 @@ const cli = meow(`
 
     $ github-mirror -t ABCDEFG -u AndersDJohnson
 
-    $ github-mirror -t ABCDEFG -o verb
+    $ github-mirror -t ABCDEFG -o verbose
 
 `, {
   alias: {
