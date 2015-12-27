@@ -25,6 +25,15 @@ function run (options) {
   options = options || {}
   options.dir = options.dir || temp.mkdirSync('github-mirror-')
   options.clone = options.hasOwnProperty('clone') ? options.close : true
+  options.ownerType = options.ownerType || 'users' // or 'orgs'
+
+  if (options.user) {
+    options.owner = options.user
+  }
+  else if (options.org) {
+    options.owner = options.org
+    options.ownerType = 'orgs'
+  }
 
   try {
     var repos = jsonfile.readFileSync(options.reposFile)
@@ -35,7 +44,8 @@ function run (options) {
       _.pick(options, ['username', 'password', 'token'])
     ))
 
-    var repoPromises = octo.users('AndersDJohnson').repos.fetch()
+    var reposOrg = options.owner ? octo[options.ownerType](options.owner) : octo.users
+    var repoPromises = reposOrg.repos.fetch()
 
     fetchAll(repoPromises).then(function (repos) {
       mkdirp.sync(path.dirname(options.reposFile))
