@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * github-mirror -t `json -f token.private.json token` -n -x 2
  */
