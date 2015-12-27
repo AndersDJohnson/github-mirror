@@ -38,6 +38,9 @@ mirror({
   reposFile: './data/repos-cli.json',
   dir: './data/mirror-cli',
   maxRepos: flags.x,
-  clone: ! flags.c,
-  token: flags.t
+  clone: ! flags.n,
+  token: flags.t,
+  org: flags.o,
+  user: flags.u,
+  password: flags.p
 })
