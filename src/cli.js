@@ -13,6 +13,7 @@ const cli = meow(`
 
   Options
     -h, --help                Show this help.
+    -d, --dir                 Output directory.
     -t, --token <token>       GitHub token
     -p, --password <password> Password (instead of token)
     -u, --user <user>         User (defaults to user for token)
@@ -20,6 +21,7 @@ const cli = meow(`
     -x, --max-repos <max>     Max number of repos
     -n, --no-clone            Don't clone.
     -f, --fresh               Don't cache.
+    -c, --cache               Cache file.
 
   Examples
     $ github-mirror -t ABCDEFG
@@ -37,8 +39,8 @@ const cli = meow(`
 var flags = cli.flags
 
 mirror({
-  reposFile: './data/repos-cli.json',
-  dir: './data/mirror-cli',
+  reposFile: flags.c, // e.g. './data/repos-cli.json'
+  dir: flags.d || process.cwd(), // e.g. './data/mirror-cli'
   maxRepos: flags.x,
   clone: ! flags.n,
   token: flags.t,
