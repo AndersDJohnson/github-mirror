@@ -1,5 +1,9 @@
 # github-mirror
-Mirror/backup your GitHub data (repos).
+> Mirror/backup your GitHub data (repos).
+
+[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/github-mirror)
+
+[![NPM](https://nodei.co/npm/github-mirror.png)](https://nodei.co/npm/github-mirror/)
 
 ## Install
 
