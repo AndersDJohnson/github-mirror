@@ -32,11 +32,22 @@ const cli = meow(`
 
 `, {
   alias: {
-    h: 'help'
+    h: 'help',
+    d: 'dir',
+    t: 'token',
+    u: 'user',
+    o: 'org',
+    x: 'max-repos',
+    n: 'dry-run',
+    s: 'skip-clone',
+    f: 'fresh',
+    c: 'cache'
   }
 })
 
 var flags = cli.flags
+
+console.log(flags)
 
 mirror({
   reposFile: flags.c, // e.g. './data/repos-cli.json'
