@@ -1,6 +1,8 @@
 # github-mirror
 > Mirror/backup your GitHub data (repos).
 
+Clones repos to a local directory for backup.
+
 [![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/package/github-mirror)
 
 [![NPM](https://nodei.co/npm/github-mirror.png)](https://nodei.co/npm/github-mirror/)
