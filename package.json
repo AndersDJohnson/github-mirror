@@ -9,7 +9,8 @@
   "scripts": {
     "test": "rm -rf data/mirror && node test"
   },
-  "author": "",
+  "repository": "https://github.com/AndersDJohnson/github-mirror.git",
+  "author": "Anders D. Johnson",
   "license": "ISC",
   "dependencies": {
     "debug": "^2.2.0",
