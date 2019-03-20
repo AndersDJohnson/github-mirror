@@ -77,7 +77,7 @@ function fetchRepos(options) {
     fetchAll(repoPromises).then(function (repos) {
       var reposFile = options.reposFile || path.join(options.dir, 'repos.json')
       mkdirp.sync(path.dirname(reposFile))
-      jsonfile.writeFileSync(reposFile, repos)
+      jsonfile.writeFileSync(reposFile, repos, { spaces: 2 })
       resolve(repos)
     }, function (err) {
       console.error(err)
