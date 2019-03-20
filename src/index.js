@@ -21,7 +21,7 @@ temp = temp.track()
 
 module.exports = run
 
-function run (options) {
+function run(options) {
 
   options = options || {}
   options.dir = options.dir || temp.mkdirSync('github-mirror-')
@@ -36,14 +36,14 @@ function run (options) {
     options.ownerType = 'orgs'
   }
 
-  if (! options.dryRun) {
+  if (!options.dryRun) {
     options.dir = options.dir || process.cwd()
   }
 
   debug('options', options)
 
   var reposPromise
-  if (options.reposFile && ! options.fresh) {
+  if (options.reposFile && !options.fresh) {
     try {
       reposPromise = Promise.resolve(jsonfile.readFileSync(options.reposFile))
     }
@@ -58,13 +58,13 @@ function run (options) {
   reposPromise.then(function (repos) {
     handleRepos(options, repos)
   })
-  .catch(function (err) {
-    console.error(err)
-  })
+    .catch(function (err) {
+      console.error(err)
+    })
 
 }
 
-function fetchRepos (options) {
+function fetchRepos(options) {
   return new Promise(function (resolve, reject) {
     assert(options.token || (options.username && options.password))
     var octo = new Octokat(Object.assign({},
@@ -83,14 +83,14 @@ function fetchRepos (options) {
       console.error(err)
       reject(err)
     })
-    .catch(function (err) {
-      console.error(err)
-      reject(err)
-    })
+      .catch(function (err) {
+        console.error(err)
+        reject(err)
+      })
   })
 }
 
-function fetchAll (startPromise) {
+function fetchAll(startPromise) {
   return promiseRecurse(startPromise, function (result) {
     return !result ? null : result.nextPage ? result.nextPage() : null
   }).then(function (results) {
@@ -98,7 +98,7 @@ function fetchAll (startPromise) {
   })
 }
 
-function handleRepos (options, repos) {
+function handleRepos(options, repos) {
 
   repos = repos.slice(0, options.maxRepos)
 
@@ -112,28 +112,28 @@ function handleRepos (options, repos) {
     all.add(promise)
   })
   all.run()
-  .then(function (results) {
-    var totalSize = results.reduce(function (memo, repo) {
-      return memo + (repo.size || 0)
-    }, 0)
+    .then(function (results) {
+      var totalSize = results.reduce(function (memo, repo) {
+        return memo + (repo.size || 0)
+      }, 0)
 
-    console.log('Total size:', filesize(totalSize).human())
-  }, function (err) {
-    console.log('ERROR', err)
-  })
-  .catch(function (err) {
-    console.error(err)
-  })
+      console.log('Total size:', filesize(totalSize).human())
+    }, function (err) {
+      console.log('ERROR', err)
+    })
+    .catch(function (err) {
+      console.error(err)
+    })
 
 }
 
-function handleRepoPromise (options, repo) {
+function handleRepoPromise(options, repo) {
   return function () {
     return handleRepo(options, repo)
   }
 }
 
-function handleRepo (options, repo) {
+function handleRepo(options, repo) {
   return new Promise(function (resolve, reject) {
     // console.log(options, repo)
 
