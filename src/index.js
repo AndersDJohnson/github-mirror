@@ -2,31 +2,33 @@
 // https://developer.github.com/v3/
 
 import "@babel/polyfill";
-import Octokat from "octokat";
+import { promisify } from "util";
+import path from "path";
 import mkdirp from "mkdirp";
 import jsonfile from "jsonfile";
-import path from "path";
 import gift from "gift";
 import assert from "assert";
-import _ from "lodash";
 import temp from "temp";
 import getSize from "get-folder-size";
 import filesize from "file-size";
-import { promiseRecurse } from "promise-recurse";
 import debugFactory from "debug";
+import fetch from "node-fetch";
+import fetchPaginate from "fetch-paginate";
+
+global.fetch = fetch;
 
 const debug = debugFactory("github-mirror");
 
 temp.track();
 
-function run(options) {
-  options = options || {};
+const run = async (options = {}) => {
   options.dir = options.dir || temp.mkdirSync("github-mirror-");
   options.clone = options.clone === false ? false : true;
   options.ownerType = options.ownerType || "users"; // or 'orgs'
 
   if (options.user) {
     options.owner = options.user;
+    options.ownerType = "users";
   } else if (options.org) {
     options.owner = options.org;
     options.ownerType = "orgs";
@@ -38,64 +40,53 @@ function run(options) {
 
   debug("options", options);
 
-  var reposPromise;
-  if (options.reposFile && !options.fresh) {
-    try {
-      reposPromise = Promise.resolve(jsonfile.readFileSync(options.reposFile));
-    } catch (e) {
-      reposPromise = fetchRepos(options);
+  try {
+    let repos;
+    if (options.reposFile && !options.fresh) {
+      try {
+        repos = await Promise.resolve(jsonfile.readFileSync(options.reposFile));
+      } catch (e) {
+        repos = await fetchRepos(options);
+      }
+    } else {
+      repos = await fetchRepos(options);
     }
-  } else {
-    reposPromise = fetchRepos(options);
+
+    handleRepos(options, repos);
+  } catch (err) {
+    console.error(err);
   }
+};
 
-  reposPromise
-    .then(function(repos) {
-      handleRepos(options, repos);
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
-}
+const fetchRepos = async options => {
+  const { org, token, user, dir } = options;
 
-function fetchRepos(options) {
-  return new Promise(function(resolve, reject) {
-    assert(options.token || (options.username && options.password));
-    var octo = new Octokat(
-      Object.assign({}, _.pick(options, ["username", "password", "token"]))
-    );
+  assert(token);
 
-    var reposOrg = options.owner
-      ? octo[options.ownerType](options.owner)
-      : octo.user;
-    var repoPromises = reposOrg.repos.fetch();
+  let ownerPath;
+  if (user) ownerPath = `/users/${user}`;
+  else if (org) ownerPath = `/orgs/${org}`;
+  else ownerPath = "/user";
 
-    fetchAll(repoPromises)
-      .then(
-        function(repos) {
-          var reposFile =
-            options.reposFile || path.join(options.dir, "repos.json");
-          mkdirp.sync(path.dirname(reposFile));
-          jsonfile.writeFileSync(reposFile, repos, { spaces: 2 });
-          resolve(repos);
-        },
-        function(err) {
-          console.error(err);
-          reject(err);
+  const url = `https://api.github.com${ownerPath}/repos`;
+
+  try {
+    const { data: repos } = await fetchPaginate(url, {
+      options: {
+        headers: {
+          Authorization: `token ${token}`
         }
-      )
-      .catch(function(err) {
-        console.error(err);
-        reject(err);
-      });
-  });
-}
-
-function fetchAll(startPromise) {
-  return promiseRecurse(startPromise, result =>
-    !result ? null : result.nextPage ? result.nextPage() : null
-  ).then(results => _.flatten(results));
-}
+      }
+    });
+    const reposFile = options.reposFile || path.join(dir, "repos.json");
+    mkdirp.sync(path.dirname(reposFile));
+    jsonfile.writeFileSync(reposFile, repos, { spaces: 2 });
+    return repos;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
 
 const handleRepos = async (options, repos) => {
   repos = repos.slice(0, options.maxRepos);
@@ -109,7 +100,7 @@ const handleRepos = async (options, repos) => {
       await handleRepo(
         {
           ...options,
-          dir: path.join(options.dir, repo.fullName)
+          dir: path.join(options.dir, repo.full_name)
         },
         repo
       );
@@ -119,56 +110,49 @@ const handleRepos = async (options, repos) => {
   }
 };
 
-function handleRepo(options, repo) {
-  return new Promise(function(resolve, reject) {
-    // console.log(options, repo)
+const handleRepo = async (options, repo) => {
+  var state = {
+    repo: repo
+  };
 
-    var state = {
-      repo: repo
-    };
+  var dir = options.dir || temp.mkdirSync("github-mirror-");
 
-    var dir = options.dir || temp.mkdirSync("github-mirror-");
-    // console.log(dir)
+  var cloneDir = path.join(dir, "git");
 
-    var cloneDir = path.join(dir, "git");
-    console.log(repo.cloneUrl);
-    assert(repo.cloneUrl);
+  console.log(repo.clone_url);
 
-    if (!options.clone) {
-      return resolve(state);
-    }
+  assert(repo.clone_url);
 
-    console.log("cloning", repo.fullName, "into", cloneDir);
-    gift.clone(repo.cloneUrl, cloneDir, function(err, _repo) {
-      if (err) {
-        state.error = err;
-        state.errorAt = "CLONE";
-        return reject(state);
-      }
-      // console.log(err, _repo)
-      console.log("cloned", repo.fullName);
+  if (!options.clone) {
+    return state;
+  }
 
-      state.clone = _repo;
+  console.log("cloning", repo.full_name, "into", cloneDir);
 
-      getSize(_repo.path, function(err, size) {
-        if (err) {
-          // state.error = err
-          // state.errorAt = 'getSize'
-          // return reject(state)
-          return resolve(state);
-        }
-        // console.log(size)
-        console.log(filesize(size).human());
-        try {
-          temp.cleanupSync();
-        } catch (e) {
-          // console.warn(e)
-        }
-        state.size = size;
-        resolve(state);
-      });
-    });
-  });
-}
+  try {
+    state.errorAt = "CLONE";
+    const _repo = await promisify(gift.clone)(repo.clone_url, cloneDir);
+
+    console.log("cloned", repo.full_name);
+
+    state.clone = _repo;
+
+    state.errorAt = "SIZE";
+    const size = await promisify(getSize)(_repo.path);
+
+    state.size = size;
+
+    console.log(filesize(size).human());
+
+    state.errorAt = "TEMPCLEANUP";
+    temp.cleanupSync();
+
+    return state;
+  } catch (err) {
+    state.error = err;
+
+    throw state;
+  }
+};
 
 export default run;

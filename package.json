@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "debug": "^2.2.0",
-    "es6-promise": "^3.0.2",
+    "fetch-paginate": "^3.1.0",
     "file-size": "^1.0.0",
     "get-folder-size": "^1.0.0",
     "gift": "^0.7.0",
@@ -23,8 +23,7 @@
     "lodash": "^3.10.1",
     "meow": "^3.6.0",
     "mkdirp": "^0.5.1",
-    "octokat": "^0.4.15",
-    "promise-recurse": "^1.1.6",
+    "node-fetch": "^2.6.0",
     "temp": "^0.8.3"
   },
   "devDependencies": {
