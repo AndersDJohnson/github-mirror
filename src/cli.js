@@ -1,13 +1,14 @@
-#!/usr/bin/env node
-
 /**
  * github-mirror -t `json -f token.private.json token` -n -x 2 -f
  */
+import "@babel/polyfill";
 
-const meow = require('meow')
-const mirror = require('.')
+import meow from "meow";
 
-const cli = meow(`
+import mirror from ".";
+
+const cli = meow(
+  `
   Usage
     $ github-mirror [options]
 
@@ -30,34 +31,36 @@ const cli = meow(`
 
     $ github-mirror -t ABCDEFG -o verbose
 
-`, {
-  alias: {
-    h: 'help',
-    d: 'dir',
-    t: 'token',
-    u: 'user',
-    o: 'org',
-    x: 'max-repos',
-    n: 'dry-run',
-    s: 'skip-clone',
-    f: 'fresh',
-    c: 'cache'
+`,
+  {
+    alias: {
+      h: "help",
+      d: "dir",
+      t: "token",
+      u: "user",
+      o: "org",
+      x: "max-repos",
+      n: "dry-run",
+      s: "skip-clone",
+      f: "fresh",
+      c: "cache"
+    }
   }
-})
+);
 
-var flags = cli.flags
+var flags = cli.flags;
 
-console.log(flags)
+console.log(flags);
 
 mirror({
   reposFile: flags.c, // e.g. './data/repos-cli.json'
   dir: flags.d, // e.g. './data/mirror-cli'
   maxRepos: flags.x,
   dryRun: flags.n,
-  clone: ! flags.s,
+  clone: !flags.s,
   token: flags.t,
   org: flags.o,
   user: flags.u,
   password: flags.p,
   fresh: flags.f
-})
+});
